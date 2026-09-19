@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"c:\\\\Users\\\\Hp\\\\Desktop\\\\pumashoes\\\\public\")",
+      "Bash(dir \"c:\\\\Users\\\\Hp\\\\Desktop\\\\pumashoes\\\\app\" /b)",
+      "PowerShell(Copy-Item -Path \"c:\\\\Users\\\\Hp\\\\Desktop\\\\pumashoes\\\\public\\\\favicon.ico\" -Destination \"c:\\\\Users\\\\Hp\\\\Desktop\\\\pumashoes\\\\app\\\\favicon.ico\" -Force)"
+    ]
+  }
+}
