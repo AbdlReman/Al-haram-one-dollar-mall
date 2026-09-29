@@ -32,13 +32,12 @@ export default function ProductCard({
   const activeVariant =
     product.colorVariants.find((variant) => variant.color === selectedColor) || product.colorVariants[0];
   const mainImage = activeVariant?.images?.[0] || product.images[0] || "";
-  const displayColor = selectedColor || product.colors[0] || "";
   const { hasDiscount, finalPrice, discountPercent } = cardPrice(product);
   const isQuick = product.productType === "quick";
   const outOfStock = !product.inStock || Number(product.stockQuantity) <= 0;
 
-  const handleQuickAdd = () => {
-    const added = addToCart(product, displayColor || "Default", mainImage, "", 1, finalPrice);
+  const handleAddToCart = () => {
+    const added = addToCart(product, selectedColor || "Default", mainImage, "", 1, finalPrice);
     if (added <= 0) {
       toast.error("Out of stock", { description: product.name });
       return;
@@ -47,7 +46,7 @@ export default function ProductCard({
   };
 
   const media = (
-    <div className="relative aspect-[1/1.15]">
+    <div className="relative aspect-square">
       {outOfStock ? (
         <span className="absolute left-2 top-2 z-10 bg-black px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
           Out of stock
@@ -75,12 +74,12 @@ export default function ProductCard({
         </button>
       ) : null}
       {mainImage ? (
-        // Width-fitted, bottom-anchored: never crops left/right; only the top is clipped when taller.
+        // Fills the cell edge-to-edge, cropping as needed — no letterboxing.
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={mainImage}
           alt={product.name}
-          className="absolute inset-x-0 bottom-0 block w-full h-auto"
+          className="absolute inset-0 h-full w-full object-cover"
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           decoding="async"
@@ -93,15 +92,10 @@ export default function ProductCard({
     </div>
   );
 
-  const titleRow = (
-    <div className="flex items-start justify-between gap-2">
-      <h3 className="text-[13px] font-semibold leading-snug tracking-tight text-black line-clamp-1">
-        {product.name}
-      </h3>
-      <span className="shrink-0 text-[13px] font-semibold tabular-nums text-black">
-        {formatPkr(finalPrice)}
-      </span>
-    </div>
+  const title = (
+    <h3 className="text-[13px] font-semibold leading-snug tracking-tight text-black line-clamp-1">
+      {product.name}
+    </h3>
   );
 
   return (
@@ -118,36 +112,27 @@ export default function ProductCard({
       )}
 
       <div className="mt-2 flex flex-1 flex-col">
-        {!isQuick ? (
-          <p className="text-[10px] uppercase tracking-wide text-neutral-500">
-            {Math.max(1, product.colors?.length || 1)} color{(product.colors?.length || 1) > 1 ? "s" : ""}
-          </p>
-        ) : null}
-        {isQuick ? (
-          <div className="mt-1 block">{titleRow}</div>
-        ) : (
-          <Link href={`/shop/${product.slug}`} className="mt-1 block">
-            {titleRow}
+        {isQuick ? title : (
+          <Link href={`/shop/${product.slug}`} className="block">
+            {title}
           </Link>
         )}
-        {!isQuick ? (
-          <p className="mt-0.5 text-[12px] text-neutral-600 line-clamp-1">
-            {displayColor || "Sneakers"}
-          </p>
-        ) : null}
-        {hasDiscount ? (
-          <p className="mt-0.5 text-[11px] text-neutral-400 line-through tabular-nums">{formatPkr(product.price)}</p>
-        ) : null}
-        {isQuick ? (
-          <button
-            type="button"
-            onClick={handleQuickAdd}
-            disabled={outOfStock}
-            className="mt-2 w-full border border-black bg-black py-2 text-[11px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:border-neutral-300 disabled:bg-neutral-300"
-          >
-            {outOfStock ? "Sold out" : "Add to cart"}
-          </button>
-        ) : null}
+
+        <div className="mt-1 flex items-center gap-2">
+          <span className="text-[13px] font-semibold tabular-nums text-black">{formatPkr(finalPrice)}</span>
+          {hasDiscount ? (
+            <span className="text-[11px] text-neutral-400 line-through tabular-nums">{formatPkr(product.price)}</span>
+          ) : null}
+        </div>
+
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          disabled={outOfStock}
+          className="mt-2 w-full border border-black bg-black py-2 text-[11px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:border-neutral-300 disabled:bg-neutral-300"
+        >
+          {outOfStock ? "Sold out" : "Add to cart"}
+        </button>
       </div>
     </article>
   );
