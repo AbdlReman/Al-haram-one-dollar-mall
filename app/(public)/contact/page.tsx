@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -40,21 +41,32 @@ export default function ContactPage() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-black text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">
+      <section className="relative bg-black text-white py-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/07.JPG"
+            alt="Al Haram One Dollar Mall storefront"
+            fill
+            sizes="100vw"
+            className="object-cover opacity-40"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             {" / "}Contact
           </p>
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tight leading-none">
             Get in
             <br />
-            <span className="text-gray-500">Touch</span>
+            <span className="text-gray-400">Touch</span>
           </h1>
         </div>
       </section>
 
-      <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
           {/* Info */}
           <div className="lg:col-span-2 space-y-10">

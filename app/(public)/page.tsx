@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import { serializeProductFromLean } from "@/lib/serializeProduct";
 import Product from "@/models/Product";
 import type { IProduct } from "@/types/product";
+import ProductCard from "@/components/shop/ProductCard";
 
 export const metadata: Metadata = {
   title: "Al Haram One Dollar Mall | Skin Care, Makeup, Electronics & Kitchen Accessories",
@@ -76,6 +77,17 @@ export default async function HomePage() {
     .map((p) => serializeProductFromLean(p))
     .map((p, idx) => featuredCardData(p, idx));
 
+  const rawLatest = await Product.find({
+    isActive: true,
+    $or: [{ status: "Published" }, { status: { $exists: false } }],
+  })
+    .sort({ createdAt: -1 })
+    .limit(8)
+    .lean();
+  const latestProducts: IProduct[] = (rawLatest as Record<string, unknown>[]).map((p) =>
+    serializeProductFromLean(p)
+  );
+
   return (
     <div>
       {/* Hero Section */}
@@ -86,7 +98,7 @@ export default async function HomePage() {
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full border border-gray-800 opacity-30" />
         <div className="absolute right-20 top-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full border border-gray-700 opacity-20" />
 
-        <div className="relative max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+        <div className="relative max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-white mb-4 animate-fade-in-up text-4xl md:text-6xl font-black uppercase tracking-tight">
               Al Haram One Dollar Mall
@@ -115,7 +127,7 @@ export default async function HomePage() {
       </section>
 
       {/* Category Strip */}
-      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">Shop by Category</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {categories.map((cat) => (
@@ -139,7 +151,7 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pb-14">
         <div className="flex items-end justify-between mb-10">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Curated For You</p>
@@ -189,9 +201,30 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Latest Products */}
+      {latestProducts.length > 0 ? (
+        <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Fresh In</p>
+              <h2 className="text-4xl font-black uppercase tracking-tight">Latest Products</h2>
+            </div>
+            <Link href="/shop" className="text-xs font-bold uppercase tracking-widest hover:opacity-60 transition-opacity flex items-center gap-2">
+              View All →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+            {latestProducts.map((product, idx) => (
+              <ProductCard key={product._id} product={product} priority={idx < 4} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {/* Full-width Banner */}
       <section
-        className="relative text-white py-24 text-center overflow-hidden"
+        className="relative text-white py-16 text-center overflow-hidden"
         style={{ backgroundImage: "url(/images/hero.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-slate-900/75" />
@@ -209,7 +242,7 @@ export default async function HomePage() {
       </section>
 
       {/* Why Us */}
-      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="text-center mb-14">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Why Al Haram One Dollar Mall</p>
           <h2 className="text-4xl font-black uppercase tracking-tight">The Difference</h2>

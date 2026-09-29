@@ -44,7 +44,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-black text-white">
-      <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="md:col-span-1">
@@ -52,9 +52,9 @@ export default function Footer() {
               <Image
                 src="/images/logo.png"
                 alt="Al Haram One Dollar Mall"
-                width={200}
-                height={48}
-                className="h-9 w-auto max-w-[11rem] object-contain object-left"
+                width={260}
+                height={64}
+                className="h-14 w-auto max-w-[14rem] object-contain object-left"
               />
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
@@ -134,7 +134,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="border-t border-gray-800 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-xs">
             © {new Date().getFullYear()} Al Haram One Dollar Mall. All rights reserved.
           </p>

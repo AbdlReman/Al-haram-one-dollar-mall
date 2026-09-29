@@ -66,20 +66,20 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-zinc-950/95 backdrop-blur border-b border-zinc-800">
       {/* Top promo bar */}
-      <div className="bg-white text-zinc-900 text-center py-2 text-xs font-bold tracking-widest uppercase border-b border-zinc-200">
+      <div className="bg-white text-zinc-900 text-center py-1.5 text-xs font-bold tracking-widest uppercase border-b border-zinc-200">
         Visit Bangla Chowk, Mamu Kanjan | Order Online: 0334-2743554
       </div>
 
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
             <Image
               src="/images/logo.png"
               alt="Al Haram One Dollar Mall"
-              width={200}
-              height={48}
-              className="h-8 w-auto max-w-[min(11rem,42vw)] object-contain object-left"
+              width={260}
+              height={64}
+              className="h-14 w-auto max-w-[min(15rem,46vw)] object-contain object-left"
               priority
             />
           </Link>

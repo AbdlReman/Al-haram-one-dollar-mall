@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+
+const galleryImages = [
+  "/images/02.JPG",
+  "/images/03.JPG",
+  "/images/04.JPG",
+  "/images/05.JPG",
+  "/images/06.JPG",
+  "/images/07.JPG",
+];
 
 export const metadata: Metadata = {
   title: "About Us | Al Haram One Dollar Mall",
@@ -18,8 +28,8 @@ export default function AboutPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-black text-white min-h-[60vh] flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+      <section className="bg-black text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 w-full">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             {" / "}About
@@ -40,25 +50,36 @@ export default function AboutPage() {
                 <p>Visit us in-store at Bangla Chowk, Mamu Kanjan near Bab-e-Arqam School, or order online.</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                ["6+", "PRODUCT CATEGORIES"],
-                ["QUALITY", "CHECKED ITEMS"],
-                ["AFFORDABLE", "EVERYDAY PRICING"],
-                ["NEW STOCK", "REGULARLY"],
-              ].map(([num, label]) => (
-                <div key={label} className="border border-gray-800 p-6">
-                  <p className="text-2xl md:text-3xl font-black mb-2">{num}</p>
-                  <p className="text-gray-500 text-xs uppercase tracking-widest">{label}</p>
-                </div>
-              ))}
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-900">
+              <Image
+                src="/images/01.JPG"
+                alt="Inside Al Haram One Dollar Mall"
+                fill
+                sizes="(min-width: 1024px) 40vw, 90vw"
+                className="object-cover"
+                priority
+              />
             </div>
+          </div>
+
+          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              ["6+", "PRODUCT CATEGORIES"],
+              ["QUALITY", "CHECKED ITEMS"],
+              ["AFFORDABLE", "EVERYDAY PRICING"],
+              ["NEW STOCK", "REGULARLY"],
+            ].map(([num, label]) => (
+              <div key={label} className="border border-gray-800 p-6">
+                <p className="text-2xl md:text-3xl font-black mb-2">{num}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-widest">{label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Mission */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Our Mission</p>
@@ -114,8 +135,34 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Store Gallery */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div className="mb-10 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Take a Look Inside</p>
+          <h2 className="text-4xl font-black uppercase tracking-tight">Visit Our Store</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {galleryImages.map((src, i) => (
+            <div
+              key={src}
+              className={`relative overflow-hidden bg-gray-100 ${
+                i === 0 ? "col-span-2 aspect-[16/9] md:col-span-1 md:aspect-square" : "aspect-square"
+              }`}
+            >
+              <Image
+                src={src}
+                alt="Al Haram One Dollar Mall store"
+                fill
+                sizes="(min-width: 768px) 33vw, 50vw"
+                className="object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="bg-black text-white py-20 text-center">
+      <section className="bg-black text-white py-16 text-center">
         <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight mb-6">
           Ready to Shop?
         </h2>
