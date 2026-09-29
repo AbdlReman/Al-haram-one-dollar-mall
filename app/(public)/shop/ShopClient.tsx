@@ -30,6 +30,13 @@ function categoriesOf(product: IProduct): string[] {
   return product.category ? [product.category] : [];
 }
 
+/** Category names come from several sources (hardcoded links, free-text admin entry, DB
+ * aggregation) so matching is done case/whitespace-insensitively to avoid silently dropping
+ * the filter when casing differs. */
+function normalizeCategoryKey(value: string): string {
+  return value.trim().toLowerCase();
+}
+
 type DropdownOption = {
   value: string;
   label: string;
@@ -141,9 +148,14 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
   const qParam = searchParams.get("q") || "";
 
   const categories = useMemo(() => {
-    const rest = Array.from(new Set(products.flatMap((p) => categoriesOf(p)).filter(Boolean))).sort((a, b) =>
-      a.localeCompare(b)
-    );
+    const seen = new Map<string, string>();
+    for (const p of products) {
+      for (const c of categoriesOf(p)) {
+        const key = normalizeCategoryKey(c);
+        if (key && !seen.has(key)) seen.set(key, c);
+      }
+    }
+    const rest = Array.from(seen.values()).sort((a, b) => a.localeCompare(b));
     return ["All", ...rest];
   }, [products]);
   const sizes = useMemo(() => {
@@ -162,8 +174,12 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
     return ["All", ...rest];
   }, [products]);
 
-  const category =
-    requestedCategory && categories.includes(requestedCategory) ? requestedCategory : "All";
+  const category = useMemo(() => {
+    if (!requestedCategory) return "All";
+    const key = normalizeCategoryKey(requestedCategory);
+    const match = categories.find((c) => c !== "All" && normalizeCategoryKey(c) === key);
+    return match || "All";
+  }, [requestedCategory, categories]);
 
   const [size, setSize] = useState("All");
   const [color, setColor] = useState("All");
@@ -189,8 +205,9 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
   const setSortFilter = (v: string) => { setSort(v); };
 
   const filtered = useMemo(() => {
+    const categoryKey = normalizeCategoryKey(category);
     return products
-      .filter((p) => category === "All" || categoriesOf(p).includes(category))
+      .filter((p) => category === "All" || categoriesOf(p).some((c) => normalizeCategoryKey(c) === categoryKey))
       .filter((p) => !saleOnly || Number(p.discount || 0) > 0)
       .filter((p) => size === "All" || p.sizes.includes(size))
       .filter((p) => color === "All" || p.colors.includes(color))

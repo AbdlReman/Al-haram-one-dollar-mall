@@ -33,13 +33,13 @@ export const metadata: Metadata = {
   },
 };
 
-const categories = [
-  { name: "Kitchen Accessories", desc: "Our most popular department", bg: "bg-black", text: "text-white" },
-  { name: "Electronics", desc: "Handy gadgets & accessories", bg: "bg-gray-100", text: "text-black" },
-  { name: "Skin Care", desc: "Everyday beauty essentials", bg: "bg-gray-900", text: "text-white" },
-  { name: "Makeup", desc: "Look good for less", bg: "bg-gray-100", text: "text-black" },
-  { name: "Hair Care", desc: "For healthy, happy hair", bg: "bg-black", text: "text-white" },
-  { name: "Jewelry", desc: "Affordable everyday sparkle", bg: "bg-gray-100", text: "text-black" },
+const categoryStyles = [
+  { bg: "bg-black", text: "text-white" },
+  { bg: "bg-gray-100", text: "text-black" },
+  { bg: "bg-gray-900", text: "text-white" },
+  { bg: "bg-gray-100", text: "text-black" },
+  { bg: "bg-black", text: "text-white" },
+  { bg: "bg-gray-100", text: "text-black" },
 ];
 
 export const dynamic = "force-dynamic";
@@ -66,6 +66,23 @@ function featuredCardData(product: IProduct, index: number) {
 
 export default async function HomePage() {
   await connectDB();
+  const categoryAgg = await Product.aggregate([
+    {
+      $match: {
+        isActive: true,
+        $or: [{ status: "Published" }, { status: { $exists: false } }],
+      },
+    },
+    { $unwind: "$categories" },
+    { $group: { _id: "$categories", count: { $sum: 1 } } },
+    { $sort: { count: -1, _id: 1 } },
+    { $limit: 6 },
+  ]);
+  const categories = (categoryAgg as { _id: unknown; count: number }[])
+    .map((c) => ({ name: String(c._id || "").trim(), count: Number(c.count || 0) }))
+    .filter((c) => c.name)
+    .map((c, idx) => ({ ...c, ...categoryStyles[idx % categoryStyles.length] }));
+
   const rawFeatured = await Product.find({
     isFeatured: true,
     isActive: true,
@@ -128,28 +145,30 @@ export default async function HomePage() {
       </section>
 
       {/* Category Strip */}
-      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">Shop by Category</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {categories.map((cat) => (
-            <Link
-              key={cat.name}
-              href={`/shop?category=${encodeURIComponent(cat.name)}`}
-              className={`${cat.bg} ${cat.text} group relative overflow-hidden h-56 flex flex-col justify-end p-8 hover:opacity-90 transition-opacity`}
-            >
-              <span className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">
-                {cat.desc}
-              </span>
-              <h3 className="text-3xl font-black uppercase tracking-tight">
-                {cat.name}
-              </h3>
-              <span className="mt-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all">
-                Explore →
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {categories.length > 0 ? (
+        <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">Shop by Category</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {categories.map((cat) => (
+              <Link
+                key={cat.name}
+                href={`/shop?category=${encodeURIComponent(cat.name)}`}
+                className={`${cat.bg} ${cat.text} group relative overflow-hidden h-56 flex flex-col justify-end p-8 hover:opacity-90 transition-opacity`}
+              >
+                <span className="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">
+                  {cat.count} Product{cat.count === 1 ? "" : "s"}
+                </span>
+                <h3 className="text-3xl font-black uppercase tracking-tight">
+                  {cat.name}
+                </h3>
+                <span className="mt-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all">
+                  Explore →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {/* Featured Products */}
       <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pb-14">
