@@ -161,6 +161,43 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Find Us */}
+      <section className="relative overflow-hidden py-20 text-white">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/hero.jpg"
+            alt="Al Haram One Dollar Mall storefront"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black/70" />
+        </div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Find Us</p>
+          <h2 className="text-4xl font-black uppercase tracking-tight mb-6">
+            Bangla Chowk, Mamu Kanjan
+          </h2>
+          <p className="text-gray-300 leading-relaxed mb-8 max-w-lg mx-auto">
+            Near Bab-e-Arqam School. Stop by in person, or call / WhatsApp us at{" "}
+            <a href="tel:+923342743554" className="underline hover:text-white">0334-2743554</a> to order online.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <a
+              href="https://wa.me/923342743554"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
+              WhatsApp Us
+            </a>
+            <Link href="/contact" className="btn-outline border-white text-white hover:bg-white hover:text-black">
+              Contact Page
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="bg-black text-white py-16 text-center">
         <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight mb-6">

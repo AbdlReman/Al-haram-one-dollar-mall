@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { formatPkr } from "@/lib/formatCurrency";
 import { connectDB } from "@/lib/mongodb";
@@ -261,6 +262,60 @@ export default async function HomePage() {
               <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Our Story */}
+      <section className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+              <Image
+                src="/images/01.JPG"
+                alt="Inside Al Haram One Dollar Mall"
+                fill
+                sizes="(min-width: 1024px) 22vw, 45vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="mt-8 grid gap-4">
+              <div className="relative aspect-square overflow-hidden bg-gray-100">
+                <Image
+                  src="/images/03.JPG"
+                  alt="Al Haram One Dollar Mall store"
+                  fill
+                  sizes="(min-width: 1024px) 22vw, 45vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative aspect-square overflow-hidden bg-gray-100">
+                <Image
+                  src="/images/05.JPG"
+                  alt="Al Haram One Dollar Mall store"
+                  fill
+                  sizes="(min-width: 1024px) 22vw, 45vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Who We Are</p>
+            <h2 className="text-4xl font-black uppercase tracking-tight mb-6">More Than Just a Store</h2>
+            <p className="text-gray-600 leading-relaxed mb-6">
+              Al Haram One Dollar Mall brings Skin Care, Makeup, Hair Care, Electronics, Kitchen Accessories
+              and Jewelry together under one roof — every item checked for quality and priced for everyday budgets.
+            </p>
+            <p className="text-gray-600 leading-relaxed mb-8">
+              Visit us in-store at Bangla Chowk, Mamu Kanjan near Bab-e-Arqam School, or shop online anytime.
+            </p>
+            <Link
+              href="/about"
+              className="inline-flex items-center justify-center border-2 border-black bg-black px-8 py-3 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-white hover:text-black"
+            >
+              Our Story →
+            </Link>
+          </div>
         </div>
       </section>
     </div>
