@@ -42,7 +42,6 @@ export function RecentlyViewedSection({
     slug: string;
     name: string;
     image: string;
-    brand: string;
     price: number;
     discount: number;
   }[];
@@ -59,7 +58,6 @@ export function RecentlyViewedSection({
           const productLike = {
             _id: `recent-${e.slug}`,
             name: e.name,
-            brand: e.brand,
             category: "",
             price: e.price,
             description: "",

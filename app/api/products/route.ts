@@ -39,7 +39,6 @@ export async function GET(req: NextRequest) {
     await connectDB();
     const searchParams = req.nextUrl.searchParams;
     const category = searchParams.get("category");
-    const brand = searchParams.get("brand");
     const search = searchParams.get("search");
     const slugs = parseCsv(searchParams.get("slugs"));
     const size = searchParams.get("size");
@@ -63,7 +62,6 @@ export async function GET(req: NextRequest) {
         },
       ];
     }
-    if (brand) query.brand = brand;
     if (size) query.sizes = size;
     if (color) query.colors = color;
     if (search) query.name = { $regex: search, $options: "i" };
@@ -123,7 +121,6 @@ export async function POST(req: NextRequest) {
       colorVariants,
       stockQuantity: Number(body.stockQuantity || 0),
       images,
-      brand: body.brand || "",
       discount: Number(body.discount || 0),
       metaTitle: body.metaTitle || "",
       metaDescription: body.metaDescription || "",

@@ -4,7 +4,6 @@ export type RecentViewEntry = {
   slug: string;
   name: string;
   image: string;
-  brand: string;
   price: number;
   discount: number;
 };

@@ -47,22 +47,18 @@ function normalizeVariantsFromServer(data: IProduct): ColorVariant[] {
 interface ProductFormProps {
   initialData?: IProduct;
   mode: "create" | "edit";
-  brandOptions: string[];
   categoryOptions: string[];
 }
 
 export default function ProductForm({
   initialData,
   mode,
-  brandOptions,
   categoryOptions,
 }: ProductFormProps) {
   const router = useRouter();
-  const fallbackBrand = brandOptions[0] || "Generic";
   const fallbackCategory = categoryOptions[0] || "Kitchen Accessories";
   const emptyForm = {
     name: "",
-    brand: fallbackBrand,
     categories: [fallbackCategory],
     price: "" as unknown as number,
     description: "",
@@ -79,7 +75,6 @@ export default function ProductForm({
     initialData
       ? {
           name: initialData.name,
-          brand: initialData.brand,
           categories:
             Array.isArray(initialData.categories) && initialData.categories.length > 0
               ? initialData.categories
@@ -218,18 +213,6 @@ export default function ProductForm({
               placeholder="e.g. Velocity Runner Pro"
               className={inputClass}
             />
-          </div>
-
-          <div>
-            <label className={labelClass}>Brand *</label>
-            <select
-              value={form.brand}
-              onChange={(e) => set("brand", e.target.value)}
-              className={inputClass}
-              required
-            >
-              {brandOptions.map((b) => <option key={b}>{b}</option>)}
-            </select>
           </div>
 
           <div>

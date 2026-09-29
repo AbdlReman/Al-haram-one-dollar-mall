@@ -146,12 +146,6 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
     );
     return ["All", ...rest];
   }, [products]);
-  const brands = useMemo(() => {
-    const rest = Array.from(new Set(products.map((p) => p.brand).filter(Boolean))).sort((a, b) =>
-      a.localeCompare(b)
-    );
-    return ["All", ...rest];
-  }, [products]);
   const sizes = useMemo(() => {
     const rest = Array.from(new Set(products.flatMap((p) => p.sizes).map(String))).sort((a, b) => {
       const na = Number(a);
@@ -171,7 +165,6 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
   const category =
     requestedCategory && categories.includes(requestedCategory) ? requestedCategory : "All";
 
-  const [brand, setBrand] = useState("All");
   const [size, setSize] = useState("All");
   const [color, setColor] = useState("All");
   const [search, setSearch] = useState(qParam);
@@ -190,7 +183,6 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   };
 
-  const setBrandFilter = (v: string) => { setBrand(v); };
   const setSizeFilter = (v: string) => { setSize(v); };
   const setColorFilter = (v: string) => { setColor(v); };
   const setSearchFilter = (v: string) => { setSearch(v); };
@@ -200,7 +192,6 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
     return products
       .filter((p) => category === "All" || categoriesOf(p).includes(category))
       .filter((p) => !saleOnly || Number(p.discount || 0) > 0)
-      .filter((p) => brand === "All" || p.brand === brand)
       .filter((p) => size === "All" || p.sizes.includes(size))
       .filter((p) => color === "All" || p.colors.includes(color))
       .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
@@ -213,12 +204,11 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
         if (sort === "popular") return b.popularityScore - a.popularityScore;
         return +new Date(b.createdAt) - +new Date(a.createdAt);
       });
-  }, [products, category, saleOnly, brand, size, color, search, sort]);
+  }, [products, category, saleOnly, size, color, search, sort]);
 
   const resetFilters = () => {
     startTransition(() => {
       router.replace(pathname, { scroll: false });
-      setBrand("All");
       setSize("All");
       setColor("All");
       setSearch("");
@@ -229,7 +219,6 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
   const activeFilters =
     (category !== "All" ? 1 : 0) +
     (saleOnly ? 1 : 0) +
-    (brand !== "All" ? 1 : 0) +
     (size !== "All" ? 1 : 0) +
     (color !== "All" ? 1 : 0) +
     (search.trim() !== "" ? 1 : 0);
@@ -318,7 +307,6 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
                   />
                 </div>
                 <FilterDropdown id="filter-category-mob" label="Category" value={category} options={categories.map((v) => ({ value: v, label: v }))} onChange={setCategory} />
-                <FilterDropdown id="filter-brand-mob" label="Brand" value={brand} options={brands.map((v) => ({ value: v, label: v }))} onChange={setBrandFilter} />
                 <FilterDropdown id="filter-size-mob" label="Size" value={size} options={sizes.map((v) => ({ value: v, label: v }))} onChange={setSizeFilter} />
                 <FilterDropdown id="filter-color-mob" label="Color" value={color} options={colors.map((v) => ({ value: v, label: v }))} onChange={setColorFilter} />
               </div>
@@ -375,14 +363,6 @@ export default function ShopClient({ products }: { products: IProduct[] }) {
               options={categories.map((v) => ({ value: v, label: v }))}
               onChange={setCategory}
               className="min-w-[9rem] flex-1 sm:flex-none sm:w-[10rem]"
-            />
-            <FilterDropdown
-              id="filter-brand"
-              label="Brand"
-              value={brand}
-              options={brands.map((v) => ({ value: v, label: v }))}
-              onChange={setBrandFilter}
-              className="min-w-[8rem] flex-1 sm:flex-none sm:w-[9rem]"
             />
             <FilterDropdown
               id="filter-size"

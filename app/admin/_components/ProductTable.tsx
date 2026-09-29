@@ -68,7 +68,6 @@ export default function ProductTable({ products }: ProductTableProps) {
     return filteredProducts.filter((product) =>
       [
         product.name,
-        product.brand,
         product.category,
         ...(Array.isArray(product.categories) ? product.categories : []),
         product.slug,
@@ -146,7 +145,7 @@ export default function ProductTable({ products }: ProductTableProps) {
             setSearch(e.target.value);
             setPage(1);
           }}
-          placeholder="Search products by name, brand, category..."
+          placeholder="Search products by name, category..."
           className="w-full rounded-lg border border-slate-600 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
         />
       </div>
@@ -159,7 +158,6 @@ export default function ProductTable({ products }: ProductTableProps) {
               <th className="text-left px-4 py-3">Image</th>
               <th className="text-left px-4 py-3">Product</th>
               <th className="text-left px-4 py-3">Status</th>
-              <th className="text-left px-4 py-3">Brand</th>
               <th className="text-left px-4 py-3">Category</th>
               <th className="text-left px-4 py-3">Price</th>
               <th className="text-left px-4 py-3">Stock</th>
@@ -200,13 +198,6 @@ export default function ProductTable({ products }: ProductTableProps) {
                     }`}
                   >
                     {product.status === "Published" ? "Published" : "Draft"}
-                  </span>
-                </td>
-
-                {/* Brand */}
-                <td className="px-4 py-3">
-                  <span className="bg-slate-700 text-slate-300 text-xs font-bold px-2 py-1 rounded">
-                    {product.brand}
                   </span>
                 </td>
 

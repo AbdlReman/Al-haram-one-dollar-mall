@@ -14,7 +14,7 @@ export default function TaxonomyManager({
   initialItems,
 }: {
   title: string;
-  apiBase: "/api/brands" | "/api/categories";
+  apiBase: "/api/categories";
   initialItems: Item[];
 }) {
   const [items, setItems] = useState<Item[]>(initialItems);
@@ -25,7 +25,7 @@ export default function TaxonomyManager({
   const refresh = async () => {
     const res = await fetch(apiBase);
     const data = await res.json();
-    setItems(data.brands || data.categories || []);
+    setItems(data.categories || []);
   };
 
   const handleCreate = async (e: React.FormEvent) => {

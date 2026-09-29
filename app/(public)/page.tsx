@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description:
       "Skin Care, Makeup, Hair Care, Electronics, Kitchen Accessories & Jewelry — all at unbeatable prices.",
     url: "https://onedollar.alharamstore.com",
-    images: [{ url: "/images/hero.jpeg", width: 1200, height: 630, alt: "Al Haram One Dollar Mall" }],
+    images: [{ url: "/images/hero.jpg", width: 1200, height: 630, alt: "Al Haram One Dollar Mall" }],
   },
 };
 
@@ -54,7 +54,6 @@ function featuredCardData(product: IProduct, index: number) {
     name: product.name,
     price: salePrice,
     originalPrice,
-    brand: product.brand,
     color: product.colors?.[0] || "",
     bg: cardBgClasses[index % cardBgClasses.length],
     image: product.images?.[0] || "/images/1.webp",
@@ -81,7 +80,7 @@ export default async function HomePage() {
     <div>
       {/* Hero Section */}
       <section className="relative bg-black text-white overflow-hidden min-h-[60vh] flex items-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800" style={{backgroundImage: 'url(/images/hero.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.75}} />
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800" style={{backgroundImage: 'url(/images/hero.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.75}} />
 
         {/* Decorative circle */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full border border-gray-800 opacity-30" />
@@ -164,9 +163,6 @@ export default async function HomePage() {
                   loading="lazy"
                   decoding="async"
                 />
-                <span className="absolute top-3 left-3 z-10 bg-black text-white text-xs font-bold px-2 py-1 uppercase tracking-widest">
-                  {product.brand}
-                </span>
                 {product.hasDiscount ? (
                   <span className="absolute top-3 right-3 z-10 bg-red-600 text-white text-xs font-bold px-2 py-1">
                     SALE
@@ -196,7 +192,7 @@ export default async function HomePage() {
       {/* Full-width Banner */}
       <section
         className="relative text-white py-24 text-center overflow-hidden"
-        style={{ backgroundImage: "url(/images/hero.jpeg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        style={{ backgroundImage: "url(/images/hero.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-slate-900/75" />
         <div className="relative z-10 px-4">

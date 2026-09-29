@@ -27,19 +27,18 @@ export async function generateMetadata({
 
   const title = product.metaTitle?.trim()
     ? product.metaTitle.trim()
-    : `${product.name} | ${product.brand} | Al Haram One Dollar Mall`;
+    : `${product.name} | Al Haram One Dollar Mall`;
 
   const description = product.metaDescription?.trim()
     ? product.metaDescription.trim()
-    : `Buy ${product.brand} ${product.name} for Rs ${finalPrice.toLocaleString()} at Al Haram One Dollar Mall${hasDiscount ? `, ${Math.round(product.discount)}% off` : ""}. Visit Bangla Chowk, Mamu Kanjan or order online.`;
-  const image = product.images?.[0] || "/images/hero.jpeg";
+    : `Buy ${product.name} for Rs ${finalPrice.toLocaleString()} at Al Haram One Dollar Mall${hasDiscount ? `, ${Math.round(product.discount)}% off` : ""}. Visit Bangla Chowk, Mamu Kanjan or order online.`;
+  const image = product.images?.[0] || "/images/hero.jpg";
   const url = `https://onedollar.alharamstore.com/shop/${slug}`;
 
   return {
     title,
     description,
     keywords: [
-      `${product.brand} ${product.name}`,
       `buy ${product.name}`,
       "Al Haram One Dollar Mall",
       "one dollar shop",

@@ -42,7 +42,7 @@ export const metadata: Metadata = {
       "Skin Care, Makeup, Hair Care, Electronics, Kitchen Accessories & Jewelry — all at unbeatable prices. Visit Bangla Chowk, Mamu Kanjan near Bab-e-Arqam School, or order online.",
     images: [
       {
-        url: "/images/hero.jpeg",
+        url: "/images/hero.jpg",
         width: 1200,
         height: 630,
         alt: "Al Haram One Dollar Mall",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: "Al Haram One Dollar Mall | Skin Care, Makeup, Electronics & More",
     description:
       "Skin Care, Makeup, Hair Care, Electronics, Kitchen Accessories & Jewelry — all at unbeatable prices.",
-    images: ["/images/hero.jpeg"],
+    images: ["/images/hero.jpg"],
   },
   icons: {
     icon: "/favicon.ico",

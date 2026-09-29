@@ -6,7 +6,6 @@ export interface ColorVariant {
 export interface IProduct {
   _id: string;
   name: string;
-  brand: string;
   category: string;
   categories?: string[];
   price: number;

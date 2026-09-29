@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
-import Brand from "@/models/Brand";
 import Category from "@/models/Category";
 import ProductForm from "../../../_components/ProductForm";
 import type { IProduct } from "@/types/product";
@@ -18,20 +17,11 @@ export default async function EditProductPage({
   const { id } = await params;
 
   await connectDB();
-  const [raw, brandsRaw, categoriesRaw] = await Promise.all([
+  const [raw, categoriesRaw] = await Promise.all([
     Product.findById(id).lean(),
-    Brand.find({ isActive: true }).sort({ name: 1 }).lean(),
     Category.find({ isActive: true }).sort({ name: 1 }).lean(),
   ]);
   if (!raw) notFound();
-  const brandOptions = Array.from(
-    new Set(
-      (brandsRaw as Record<string, unknown>[])
-        .map((b) => String(b.name || ""))
-        .filter(Boolean)
-        .concat(String((raw as Record<string, unknown>).brand || ""))
-    )
-  );
   const categoryOptions = Array.from(
     new Set(
       (categoriesRaw as Record<string, unknown>[])
@@ -40,7 +30,6 @@ export default async function EditProductPage({
         .concat(String((raw as Record<string, unknown>).category || ""))
     )
   );
-  const finalBrandOptions = brandOptions.length > 0 ? brandOptions : ["Generic"];
   const finalCategoryOptions = Array.from(
     new Set(
       categoryOptions.length > 0
@@ -57,7 +46,6 @@ export default async function EditProductPage({
   const product: IProduct = {
     _id: String(p._id),
     name: String(p.name),
-    brand: String(p.brand || ""),
     category: String(p.category || ""),
     categories: mergedCategories,
     price: Number(p.price),
@@ -109,7 +97,6 @@ export default async function EditProductPage({
       <ProductForm
         mode="edit"
         initialData={product}
-        brandOptions={finalBrandOptions}
         categoryOptions={finalCategoryOptions}
       />
     </div>

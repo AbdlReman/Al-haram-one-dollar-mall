@@ -135,7 +135,7 @@ export default function ProductDetailClient({
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [recentEntries, setRecentEntries] = useState<
-    { slug: string; name: string; image: string; brand: string; price: number; discount: number }[]
+    { slug: string; name: string; image: string; price: number; discount: number }[]
   >([]);
 
   const mainImage = selectedImage || colorImages[0] || allImages[0] || "";
@@ -156,7 +156,6 @@ export default function ProductDetailClient({
         slug: product.slug,
         name: product.name,
         image: previewImg,
-        brand: product.brand,
         price: product.price,
         discount: product.discount,
       },
@@ -192,7 +191,7 @@ export default function ProductDetailClient({
     return () => {
       cancelled = true;
     };
-  }, [product._id, product.slug, product.name, product.brand, product.price, product.discount, product.images, variants]);
+  }, [product._id, product.slug, product.name, product.price, product.discount, product.images, variants]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -226,10 +225,6 @@ export default function ProductDetailClient({
       description: product.description || product.metaDescription,
       image: images,
       sku: product._id,
-      brand: {
-        "@type": "Brand",
-        name: product.brand || "Store",
-      },
       offers: {
         "@type": "Offer",
         url: offerUrl,
@@ -336,9 +331,6 @@ export default function ProductDetailClient({
 
           {/* Buy column */}
           <div className="flex flex-col">
-            {product.brand ? (
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-600">{product.brand}</p>
-            ) : null}
             <h1 className="mt-2 text-2xl font-black uppercase leading-tight tracking-tight text-black sm:text-3xl">
               {product.name}
             </h1>

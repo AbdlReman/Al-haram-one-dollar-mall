@@ -15,7 +15,6 @@ export default async function ProductsPage() {
   const products: IProduct[] = (raw as Record<string, unknown>[]).map((p) => ({
     _id: String(p._id),
     name: String(p.name),
-    brand: String(p.brand || ""),
     category: String(p.category || ""),
     categories: Array.isArray(p.categories)
       ? (p.categories as unknown[]).map(String).map((v) => v.trim()).filter(Boolean)

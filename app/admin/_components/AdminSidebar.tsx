@@ -46,15 +46,6 @@ const navLinks = [
     ),
   },
   {
-    href: "/admin/brands",
-    label: "Brands",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3.75h4.864a2.25 2.25 0 0 1 1.591.659l4.318 4.318a2.25 2.25 0 0 1 .659 1.591v4.864a2.25 2.25 0 0 1-.659 1.591l-4.318 4.318a2.25 2.25 0 0 1-1.591.659H9.568a2.25 2.25 0 0 1-1.591-.659l-4.318-4.318A2.25 2.25 0 0 1 3 15.182v-4.864a2.25 2.25 0 0 1 .659-1.591l4.318-4.318a2.25 2.25 0 0 1 1.591-.659Z" />
-      </svg>
-    ),
-  },
-  {
     href: "/admin/reviews",
     label: "Reviews",
     icon: (
