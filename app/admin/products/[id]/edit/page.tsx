@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
@@ -22,6 +22,7 @@ export default async function EditProductPage({
     Category.find({ isActive: true }).sort({ name: 1 }).lean(),
   ]);
   if (!raw) notFound();
+  if ((raw as Record<string, unknown>).productType === "quick") redirect(`/admin/quick-products/${id}/edit`);
   const categoryOptions = Array.from(
     new Set(
       (categoriesRaw as Record<string, unknown>[])
@@ -45,6 +46,7 @@ export default async function EditProductPage({
   const mergedCategories = categories.length > 0 ? categories : [String(p.category || "").trim()].filter(Boolean);
   const product: IProduct = {
     _id: String(p._id),
+    productType: "detail",
     name: String(p.name),
     category: String(p.category || ""),
     categories: mergedCategories,

@@ -5,9 +5,10 @@ import { useState, useCallback, useEffect, useRef } from "react";
 interface ImageUploaderProps {
   initialUrls?: string[];
   onChange: (urls: string[]) => void;
+  max?: number;
 }
 
-export default function ImageUploader({ initialUrls, onChange }: ImageUploaderProps) {
+export default function ImageUploader({ initialUrls, onChange, max }: ImageUploaderProps) {
   const urls = initialUrls ?? [];
   const [previews, setPreviews] = useState<string[]>(() => [...urls]);
   const lastSerialized = useRef<string>("");
@@ -37,7 +38,8 @@ export default function ImageUploader({ initialUrls, onChange }: ImageUploaderPr
 
         if (!res.ok) throw new Error(data.error || "Upload failed");
 
-        const newUrls = [...previews, ...data.urls];
+        const merged = [...previews, ...data.urls];
+        const newUrls = max ? merged.slice(0, max) : merged;
         setPreviews(newUrls);
         onChange(newUrls);
       } catch (e) {
@@ -46,7 +48,7 @@ export default function ImageUploader({ initialUrls, onChange }: ImageUploaderPr
         setUploading(false);
       }
     },
-    [previews, onChange]
+    [previews, onChange, max]
   );
 
   const removeImage = (index: number) => {
@@ -55,13 +57,16 @@ export default function ImageUploader({ initialUrls, onChange }: ImageUploaderPr
     onChange(newUrls);
   };
 
+  const atMax = max != null && previews.length >= max;
+
   return (
     <div className="space-y-4">
       {/* Drop zone */}
+      {atMax ? null : (
       <label className="block cursor-pointer">
         <input
           type="file"
-          multiple
+          multiple={max !== 1}
           accept="image/*"
           className="sr-only"
           onChange={(e) => {
@@ -82,12 +87,17 @@ export default function ImageUploader({ initialUrls, onChange }: ImageUploaderPr
               <svg className="w-10 h-10 text-slate-500 mx-auto mb-3" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
               </svg>
-              <p className="text-slate-300 text-sm font-medium">Click to upload images</p>
-              <p className="text-slate-500 text-xs mt-1">PNG, JPG, WEBP — multiple files allowed</p>
+              <p className="text-slate-300 text-sm font-medium">
+                Click to upload {max === 1 ? "an image" : "images"}
+              </p>
+              <p className="text-slate-500 text-xs mt-1">
+                {max === 1 ? "PNG, JPG, WEBP" : "PNG, JPG, WEBP — multiple files allowed"}
+              </p>
             </>
           )}
         </div>
       </label>
+      )}
 
       {error && <p className="text-red-400 text-sm">{error}</p>}
 

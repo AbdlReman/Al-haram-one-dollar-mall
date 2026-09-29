@@ -5,6 +5,7 @@ export interface ColorVariant {
 
 export interface IProduct {
   _id: string;
+  productType: "quick" | "detail";
   name: string;
   category: string;
   categories?: string[];

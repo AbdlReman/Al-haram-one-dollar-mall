@@ -24,6 +24,15 @@ const navLinks = [
     ),
   },
   {
+    href: "/admin/quick-products",
+    label: "Quick Add",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5 9 3.75l3.75 3.75-6.75 9.75L3.75 13.5ZM12.75 7.5l4.5-4.5 3 3-4.5 4.5m-3-3 3 3m-3-3-6 12.75 3 3 6-12.75" />
+      </svg>
+    ),
+  },
+  {
     href: "/admin/orders",
     label: "Orders",
     icon: (
@@ -129,6 +138,8 @@ export default function AdminSidebar() {
               ? pathname === "/admin/coupons"
               : link.href === "/admin/newsletter"
               ? pathname === "/admin/newsletter"
+              : link.href === "/admin/quick-products"
+              ? pathname === "/admin/quick-products" || pathname.startsWith("/admin/quick-products/")
               : pathname === link.href;
           return (
             <Link

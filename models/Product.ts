@@ -2,11 +2,12 @@ import mongoose, { Schema } from "mongoose";
 
 const ProductSchema = new Schema(
   {
+    productType: { type: String, enum: ["quick", "detail"], default: "detail" },
     name: { type: String, required: true, trim: true },
     category: { type: String, required: true, trim: true },
     categories: { type: [String], default: [] },
     price: { type: Number, required: true, min: 0 },
-    description: { type: String, required: true, maxlength: 1000 },
+    description: { type: String, default: "", maxlength: 1000 },
     detail: { type: String, default: "" },
     sizes: { type: [String], default: [] },
     colors: { type: [String], default: [] },

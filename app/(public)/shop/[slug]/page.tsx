@@ -20,6 +20,7 @@ export async function generateMetadata({
   if (!raw) return {};
 
   const product = serializeProductFromLean(raw as Record<string, unknown>);
+  if (product.productType === "quick") return {};
   const hasDiscount = Number(product.discount || 0) > 0;
   const finalPrice = hasDiscount
     ? Math.round(product.price * (1 - product.discount / 100))
@@ -76,6 +77,7 @@ export default async function ProductDetailPage({
   if (!raw) notFound();
 
   const product = serializeProductFromLean(raw as Record<string, unknown>);
+  if (product.productType === "quick") notFound();
 
   const statusClause = [{ status: "Published" }, { status: { $exists: false } }];
   const baseFilter: Record<string, unknown> = {

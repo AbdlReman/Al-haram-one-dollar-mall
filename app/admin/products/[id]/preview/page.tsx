@@ -53,6 +53,7 @@ export default async function AdminProductPreviewPage({
 
   const product: IProduct = {
     _id: String(p._id),
+    productType: p.productType === "quick" ? "quick" : "detail",
     name: String(p.name || ""),
     category: String(p.category || ""),
     price: Number(p.price || 0),

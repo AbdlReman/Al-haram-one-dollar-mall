@@ -35,6 +35,7 @@ export function serializeProductFromLean(p: Record<string, unknown>): IProduct {
 
   return {
     _id: String(p._id),
+    productType: p.productType === "quick" ? "quick" : "detail",
     name: String(p.name),
     category: fallbackCategory,
     categories,

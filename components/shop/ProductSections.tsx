@@ -57,6 +57,7 @@ export function RecentlyViewedSection({
         {entries.map((e) => {
           const productLike = {
             _id: `recent-${e.slug}`,
+            productType: "detail" as const,
             name: e.name,
             category: "",
             price: e.price,

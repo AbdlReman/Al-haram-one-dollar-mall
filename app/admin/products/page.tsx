@@ -3,48 +3,16 @@ import Link from "next/link";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import ProductTable from "../_components/ProductTable";
-import type { IProduct } from "@/types/product";
+import { serializeProductFromLean } from "@/lib/serializeProduct";
 
 export const metadata: Metadata = { title: "Products — Admin" };
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   await connectDB();
-  const raw = await Product.find({}).sort({ createdAt: -1 }).lean();
+  const raw = await Product.find({ productType: { $ne: "quick" } }).sort({ createdAt: -1 }).lean();
 
-  const products: IProduct[] = (raw as Record<string, unknown>[]).map((p) => ({
-    _id: String(p._id),
-    name: String(p.name),
-    category: String(p.category || ""),
-    categories: Array.isArray(p.categories)
-      ? (p.categories as unknown[]).map(String).map((v) => v.trim()).filter(Boolean)
-      : [String(p.category || "").trim()].filter(Boolean),
-    price: Number(p.price),
-    description: String(p.description || ""),
-    detail: String(p.detail || ""),
-    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]) : [],
-    colors: Array.isArray(p.colors) ? (p.colors as string[]) : [],
-    colorVariants: Array.isArray(p.colorVariants)
-      ? (p.colorVariants as { color: string; images: string[] }[])
-      : [],
-    stockQuantity: Number(p.stockQuantity || 0),
-    images: (p.images as string[]) || [],
-    discount: Number(p.discount || 0),
-    inStock: Boolean(p.inStock),
-    isActive: p.isActive !== false,
-    isFeatured: p.isFeatured === true,
-    status:
-      p.status === "Published" || (p.status == null && p.isActive !== false)
-        ? "Published"
-        : "Draft",
-    popularityScore: Number(p.popularityScore || 0),
-    soldCount: Number(p.soldCount || 0),
-    slug: String(p.slug || ""),
-    metaTitle: String(p.metaTitle || ""),
-    metaDescription: String(p.metaDescription || ""),
-    createdAt: String(p.createdAt),
-    updatedAt: String(p.updatedAt),
-  }));
+  const products = (raw as Record<string, unknown>[]).map((p) => serializeProductFromLean(p));
 
   const inStockCount = products.filter((p) => p.stockQuantity > 0).length;
 

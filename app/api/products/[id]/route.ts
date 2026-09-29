@@ -44,49 +44,90 @@ export async function GET(_req: NextRequest, { params }: Params) {
   }
 }
 
+const UNLIMITED_STOCK = 100000;
+
 export async function PUT(req: NextRequest, { params }: Params) {
   try {
     await connectDB();
     const { id } = await params;
     const body = await req.json();
-    const colorVariants = normalizeColorVariants(body.colorVariants);
-    const colors =
-      colorVariants.length > 0
-        ? colorVariants.map((v) => v.color)
-        : Array.isArray(body.colors)
-        ? body.colors
-        : [];
-    const images =
-      colorVariants.flatMap((v) => v.images).filter(Boolean).length > 0
-        ? colorVariants.flatMap((v) => v.images).filter(Boolean)
-        : Array.isArray(body.images)
-        ? body.images
-        : [];
-    const publish = body.publish === true || body.status === "Published" || body.isActive === true;
-    const nextStatus = publish ? "Published" : "Draft";
-    const categories = normalizeCategories(body.categories, body.category);
-    const primaryCategory = categories[0] || "";
-    const isFeatured = body.isFeatured === true;
-    const payload = {
-      name: body.name,
-      price: Number(body.price || 0),
-      description: body.description || "",
-      detail: body.detail || "",
-      category: primaryCategory,
-      categories,
-      sizes: Array.isArray(body.sizes) ? body.sizes : [],
-      colors,
-      colorVariants,
-      stockQuantity: Number(body.stockQuantity || 0),
-      images,
-      discount: Number(body.discount || 0),
-      metaTitle: body.metaTitle || "",
-      metaDescription: body.metaDescription || "",
-      inStock: Number(body.stockQuantity || 0) > 0,
-      isActive: publish,
-      isFeatured,
-      status: nextStatus,
-    };
+    const productType = body.productType === "quick" ? "quick" : "detail";
+
+    let payload: Record<string, unknown>;
+    if (productType === "quick") {
+      const name = String(body.name || "").trim();
+      const category = String(body.category || "").trim();
+      const price = Number(body.price || 0);
+      const image = String(body.image || "").trim();
+      if (!name || !category || !price || !image) {
+        return NextResponse.json(
+          { error: "Title, category, price, and image are required" },
+          { status: 400 }
+        );
+      }
+      payload = {
+        productType: "quick",
+        name,
+        price,
+        description: "",
+        detail: "",
+        category,
+        categories: [category],
+        sizes: [],
+        colors: ["Default"],
+        colorVariants: [{ color: "Default", images: [image] }],
+        stockQuantity: UNLIMITED_STOCK,
+        images: [image],
+        discount: Number(body.discount || 0),
+        inStock: true,
+        isActive: true,
+        isFeatured: false,
+        status: "Published",
+      };
+    } else {
+      const colorVariants = normalizeColorVariants(body.colorVariants);
+      const colors =
+        colorVariants.length > 0
+          ? colorVariants.map((v) => v.color)
+          : Array.isArray(body.colors)
+          ? body.colors
+          : [];
+      const images =
+        colorVariants.flatMap((v) => v.images).filter(Boolean).length > 0
+          ? colorVariants.flatMap((v) => v.images).filter(Boolean)
+          : Array.isArray(body.images)
+          ? body.images
+          : [];
+      if (!String(body.description || "").trim()) {
+        return NextResponse.json({ error: "Description is required" }, { status: 400 });
+      }
+      const publish = body.publish === true || body.status === "Published" || body.isActive === true;
+      const nextStatus = publish ? "Published" : "Draft";
+      const categories = normalizeCategories(body.categories, body.category);
+      const primaryCategory = categories[0] || "";
+      const isFeatured = body.isFeatured === true;
+      payload = {
+        productType: "detail",
+        name: body.name,
+        price: Number(body.price || 0),
+        description: body.description || "",
+        detail: body.detail || "",
+        category: primaryCategory,
+        categories,
+        sizes: Array.isArray(body.sizes) ? body.sizes : [],
+        colors,
+        colorVariants,
+        stockQuantity: Number(body.stockQuantity || 0),
+        images,
+        discount: Number(body.discount || 0),
+        metaTitle: body.metaTitle || "",
+        metaDescription: body.metaDescription || "",
+        inStock: Number(body.stockQuantity || 0) > 0,
+        isActive: publish,
+        isFeatured,
+        status: nextStatus,
+      };
+    }
     const product = await Product.findByIdAndUpdate(
       id,
       { $set: payload },

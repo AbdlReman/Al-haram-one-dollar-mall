@@ -86,10 +86,53 @@ export async function GET(req: NextRequest) {
   }
 }
 
+const UNLIMITED_STOCK = 100000;
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
+    const productType = body.productType === "quick" ? "quick" : "detail";
+
+    if (productType === "quick") {
+      const name = String(body.name || "").trim();
+      const category = String(body.category || "").trim();
+      const price = Number(body.price || 0);
+      const image = String(body.image || "").trim();
+      if (!name || !category || !price || !image) {
+        return NextResponse.json(
+          { error: "Title, category, price, and image are required" },
+          { status: 400 }
+        );
+      }
+      const product = new Product({
+        productType: "quick",
+        name,
+        price,
+        description: "",
+        detail: "",
+        category,
+        categories: [category],
+        sizes: [],
+        colors: ["Default"],
+        colorVariants: [{ color: "Default", images: [image] }],
+        stockQuantity: UNLIMITED_STOCK,
+        images: [image],
+        discount: Number(body.discount || 0),
+        metaTitle: "",
+        metaDescription: "",
+        inStock: true,
+        isActive: true,
+        isFeatured: false,
+        status: "Published",
+      });
+      await product.save();
+      return NextResponse.json(
+        { product: { ...product.toObject(), _id: String(product._id) } },
+        { status: 201 }
+      );
+    }
+
     const colorVariants = normalizeColorVariants(body.colorVariants);
     const colors =
       colorVariants.length > 0
@@ -104,12 +147,17 @@ export async function POST(req: NextRequest) {
         ? body.images
         : [];
 
+    if (!String(body.description || "").trim()) {
+      return NextResponse.json({ error: "Description is required" }, { status: 400 });
+    }
+
     const publish = body.publish === true || body.status === "Published" || body.isActive === true;
     const nextStatus = publish ? "Published" : "Draft";
     const categories = normalizeCategories(body.categories, body.category);
     const primaryCategory = categories[0] || "";
     const isFeatured = body.isFeatured === true;
     const product = new Product({
+      productType: "detail",
       name: body.name,
       price: Number(body.price || 0),
       description: body.description || "",
